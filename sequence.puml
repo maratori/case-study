@@ -1,0 +1,22 @@
+@startuml
+
+autonumber
+
+actor client
+participant "outgoing invoices" as oi
+participant "reconciliation engine" as re
+participant "transactions" as t
+participant "payment engine" as pe
+actor user
+
+client -> oi : create invoice
+oi ->> re : invoice created
+re -> re : save invoice
+user -> pe : pay
+pe -> t : create transaction
+t ->> re : transaction created
+re -> re : save transaction
+re -> re : find matching invoice
+re -> re : save relations
+
+@enduml
