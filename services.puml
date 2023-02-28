@@ -1,0 +1,35 @@
+@startuml
+
+title Services
+
+component "transactions" as t
+component "receipts" as r
+component "credit cards" as cc
+component "payments engine" as pe
+component "outgoing invoices" as oi
+component "incoming invoices" as ii
+component "reconciliation engine" as re
+database "\n   PostgreSQL   \n" as db
+database "\n   Redis   \n" as redis
+re --> db
+re --> redis
+re -> () HTTP
+
+cloud RabbitMQ {
+  queue "transactions" as Qt
+  queue "invoices" as Qi
+}
+
+pe -> cc
+pe -> r
+pe --> t
+pe --> ii
+pe --> oi
+
+t --> Qt
+ii --> Qi
+oi --> Qi
+Qt --> re
+Qi --> re
+
+@enduml
